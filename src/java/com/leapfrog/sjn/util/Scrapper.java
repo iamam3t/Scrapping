@@ -1,26 +1,30 @@
 package com.leapfrog.sjn.util;
 
 import com.leapfrog.sjn.DAO.Impl.JobsNepalDAOImpl;
-import com.leapfrog.sjn.DAO.JobsNepalDAO;
+import com.leapfrog.sjn.DAO.Impl.MeroJobsDAOImpl;
 import com.leapfrog.sjn.entity.Jobs;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.leapfrog.sjn.DAO.JobsNepalDAO;
+import com.leapfrog.sjn.DAO.MeroJobsDAO;
 
 public class Scrapper {
+
     JobsNepalDAO jnDAO = new JobsNepalDAOImpl();
+    MeroJobsDAO mjDAO = new MeroJobsDAOImpl();
 
     public Scrapper(JobsNepalDAO jnDAO) {
         this.jnDAO = jnDAO;
     }
-    
+
+    public Scrapper(MeroJobsDAO mjDAO) {
+        this.mjDAO = mjDAO;
+    }
+
     public void getScrapper(String token) {
-        //List<Jobs> jList = new ArrayList<>();
-        //JobsNepalDAO jnDAO = new JobsNepalDAOImpl();
-        String link="";
-        String regEx="";
+        String link = "";
+        String regEx = "";
         int i = 1;
         try {
             Grabber grabber = new Grabber();
@@ -53,14 +57,14 @@ public class Scrapper {
                     j.setUrlName(matcher.group(4));
                     j.setJobsTitle(matcher.group(5));
                     j.setJobsType("");
-                    jnDAO.insert(j);
+                    mjDAO.insert(j);
                     i++;
                 }
             }
-    //return jList;
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-       // return null;
+
     }
 }

@@ -5,6 +5,7 @@
  */
 package com.leapfrog.sjn.DAO;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -12,5 +13,9 @@ import java.util.List;
  * @author AM3ET
  */
 public interface GenericDAO<T> {
-       
+    boolean insert(T t);
+    List<T> getAll();
+    int insertDB(T t) throws SQLException, ClassNotFoundException;
+    List<T> getAllDB() throws SQLException, ClassNotFoundException;
+    T getByUrl(String Url) throws SQLException, ClassNotFoundException;
 }

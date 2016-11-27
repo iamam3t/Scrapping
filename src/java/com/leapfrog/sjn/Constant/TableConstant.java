@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.leapfrog.sjn.DAO;
-
-import com.leapfrog.sjn.entity.Jobs;
+package com.leapfrog.sjn.Constant;
 
 /**
  *
  * @author AM3ET
  */
-public interface JobsNepalDAO extends GenericDAO<Jobs>{
-    
+public class TableConstant {
+    public final static String TABLE_JOBSNEPAL="tbl_jobsnepal";
+    public final static String TABLE_MEROJOBS="tbl_merojobs";
 }

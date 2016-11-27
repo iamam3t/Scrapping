@@ -11,6 +11,6 @@ import com.leapfrog.sjn.entity.Jobs;
  *
  * @author AM3ET
  */
-public interface JobsNepalDAO extends GenericDAO<Jobs>{
+public interface MeroJobsDAO extends GenericDAO<Jobs>{
     
 }

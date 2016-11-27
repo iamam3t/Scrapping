@@ -1,8 +1,11 @@
 package com.leapfrog.sjn.entity;
 
+import java.util.Date;
+
 public class Jobs {
     private String companyName, jobsTitle, urlName, jobsType;
     private int id;
+    private Date addedDate;
 
     public Jobs() {
     }
@@ -45,6 +48,14 @@ public class Jobs {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Date getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Date addedDate) {
+        this.addedDate = addedDate;
     }
     
 }

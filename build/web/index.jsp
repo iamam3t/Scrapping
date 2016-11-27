@@ -1,3 +1,8 @@
+<%@page import="com.leapfrog.sjn.DAO.Impl.MeroJobsDAOImpl"%>
+<%@page import="com.leapfrog.sjn.DAO.MeroJobsDAO"%>
+<%@page import="java.sql.SQLException"%>
+<%@page import="com.leapfrog.sjn.DAO.Impl.JobsNepalDAOImpl"%>
+<%@page import="com.leapfrog.sjn.DAO.JobsNepalDAO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.leapfrog.sjn.util.Scrapper"%>
@@ -14,11 +19,14 @@
 </h1>
 <br>
 <div class="container">
-    <div class="col-md-5">
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-1">
 
-        <form action="" method="get" class="form-inline">
+    </div>
+    <div class="col-md-5">
+
+        <form action="" method="get" class="form-inline pull-right">
+            <input type="text" name="keyword"/>
+            <label>Keyword</label>
             <select name="jobSite" class="form-control">
                 <option value="">Select Website</option>
                 <option value="jobsNepal">JOBSNEPAL</option>
@@ -27,8 +35,16 @@
             <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-search"></span></button>
         </form>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+        <form action="" method="post">
+            <input class="btn btn-success" type="submit" value="Insert into Database" id="insert_db"/>
+        </form>
     </div>
+    <div class="col-md-2">
+        <input class="btn btn-info" type="submit" value="Export                       to CSV" id="csv"/>
+    </div>
+
+
 </div>
 <div class="container">
 
@@ -57,13 +73,22 @@
 
         <%
             List<Jobs> jobs = new ArrayList<Jobs>();
-            JobsNepalDAO jnDAO = new JobsNepalDAOImpl();
+            JobsNepalDAO jDAO = new JobsNepalDAOImpl();
+            MeroJobsDAO mjDAO = new MeroJobsDAOImpl();
+
             String token = "";
             if (request.getParameter("jobSite") != null) {
                 token = request.getParameter("jobSite");
-                Scrapper scrapper = new Scrapper(jnDAO);
-                scrapper.getScrapper(token);
-                jobs = jnDAO.getAll();
+                if (token.equalsIgnoreCase("jobsnepal")) {
+                    Scrapper scrapper = new Scrapper(jDAO);
+                    scrapper.getScrapper(token);
+                    jobs = jDAO.getAll();
+                } else {
+                    Scrapper scrapper = new Scrapper(mjDAO);
+                    scrapper.getScrapper(token);
+                    jobs = mjDAO.getAll();
+                }
+
             }
             for (Jobs j : jobs) {
         %>
@@ -77,4 +102,37 @@
         </tr>
     </table>
 </div>
+<%
+    if (request.getParameter("jobSite") != null) {
+        token = request.getParameter("jobSite");
+    }
+    if (request.getMethod().equalsIgnoreCase("post")) {
+
+        if (token.equalsIgnoreCase("jobsnepal")) {
+            for (Jobs j : jDAO.getAll()) {
+                if (jDAO.getByUrl(j.getUrlName()) == null) {
+                    try {
+                        jDAO.insertDB(j);
+                    } catch (Exception e) {
+                        out.print(e.getMessage());
+                    }
+                }
+            }
+
+        } else {
+            for (Jobs j : mjDAO.getAll()) {
+                if (mjDAO.getByUrl(j.getUrlName()) == null) {
+                    try {
+                        mjDAO.insertDB(j);
+                    } catch (Exception e) {
+                        out.print(e.getMessage());
+                    }
+                }
+            }
+        }
+
+    }
+%>
+
+
 <%@include file="footer.jsp"%>
