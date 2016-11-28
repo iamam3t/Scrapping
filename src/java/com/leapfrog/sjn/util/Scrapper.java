@@ -25,7 +25,6 @@ public class Scrapper {
     public void getScrapper(String token) {
         String link = "";
         String regEx = "";
-        int i = 1;
         try {
             Grabber grabber = new Grabber();
             if (token.equalsIgnoreCase("jobsnepal")) {
@@ -33,38 +32,46 @@ public class Scrapper {
                 regEx = "<a class=\"job-item\"(.*?)href=\"(.*?)\"\\s>\\s+(.*?)</a>(.*?)class=\"joblist\">\\s+(.*?)</a>(.*?)\"center\"\\s>(.*?)</td>(.*?)\">(.*?)</span>";
                 Pattern pattern = Pattern.compile(regEx);
                 Matcher matcher = pattern.matcher(grabber.grab(link));
+                getMatcher(matcher, token);
 
-                while (matcher.find()) {
-                    Jobs j = new Jobs();
-                    j.setId(i);
-                    j.setCompanyName(matcher.group(5));
-                    j.setUrlName(matcher.group(2));
-                    j.setJobsTitle(matcher.group(3));
-                    j.setJobsType(matcher.group(7));
-                    jnDAO.insert(j);
-                    i++;
-                }
             } else {
                 link = "http://www.merojob.com/";
                 regEx = "<td width=\"50%\" valign=\"top\">\\s+<a\\shref='(.*?)<strong>(.*?)</strong>(.*?)href='(.*?)'\\s+target='_blank''>(.*?)</a>";
                 Pattern pattern = Pattern.compile(regEx);
                 Matcher matcher = pattern.matcher(grabber.grab(link));
-
-                while (matcher.find()) {
-                    Jobs j = new Jobs();
-                    j.setId(i);
-                    j.setCompanyName(matcher.group(2));
-                    j.setUrlName(matcher.group(4));
-                    j.setJobsTitle(matcher.group(5));
-                    j.setJobsType("");
-                    mjDAO.insert(j);
-                    i++;
-                }
+                getMatcher(matcher, token);
             }
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    private void getMatcher(Matcher matcher, String token) {
+        int i = 1;
+        if (token.equalsIgnoreCase("jobsnepal")) {
+            while (matcher.find()) {
+                Jobs j = new Jobs();
+                j.setId(i);
+                j.setCompanyName(matcher.group(5));
+                j.setUrlName(matcher.group(2));
+                j.setJobsTitle(matcher.group(3));
+                j.setJobsType(matcher.group(7));
+                jnDAO.insert(j);
+                i++;
+            }
+        } else {
+            while (matcher.find()) {
+                Jobs j = new Jobs();
+                j.setId(i);
+                j.setCompanyName(matcher.group(2));
+                j.setUrlName(matcher.group(4));
+                j.setJobsTitle(matcher.group(5));
+                j.setJobsType("");
+                mjDAO.insert(j);
+                i++;
+            }
+        }
     }
 }
